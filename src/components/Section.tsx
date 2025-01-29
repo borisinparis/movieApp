@@ -8,112 +8,71 @@ import {
 } from "@/components/ui/carousel"
 import RightArrow from "@/app/icons/RightArrow"
 import Star from "@/app/icons/Star"
-// import Movie from "@/components/movie"
 import React, { useEffect, useState } from "react"
+import Link from "next/link"
 
 type Movie = {
+  id: string,
   title: string
   vote_average: number
   poster_path: string
-  original_title:string
+  original_title: string
 }
 type Top = {
-  title : string
+  title: string
   vote_average: number
-  poster_path:string
-  original_title:string
+  poster_path: string
+  original_title: string
 }
 type Popular = {
-  title : string
+  title: string
   vote_average: number
-  poster_path:string
-  original_title:string
+  poster_path: string
+  original_title: string
+
 }
+    const movieApiKey = "877ff59e9c1c2cdcec5fb423b387b410"
 
 
 export const Section = () => {
   const [selectedMovie, setSelectedMovie] = useState<Movie[]>([])
   const [topRated, setTopRated] = useState<Top[]>([])
-  const [popularMovie,setPopularMovie] =useState<Popular []>([])
+  const [popularMovie, setPopularMovie] = useState<Popular[]>([])
 
-  const PopularMovies = async () => {
-    try {
-      const reps = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${movieApiKey}`)
-      const resu = await reps.json()
-      setPopularMovie(resu.results)
-      console.log(resu);
 
-    }
-    catch (error) {
-      console.log(error);
-
-    }
-  }
   useEffect(() => {
-    PopularMovies()
-  }, [])
+    const fetchMovies = async () => {
 
-  const clickedTarget = (movie) => {
-    const getIdMovies = movie.id
-    console.log(getIdMovies);
+      try {
+        // Fetch Popular Movies
+        const popularRes = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${movieApiKey}`
+        );
+        const popularData = await popularRes.json();
+        setPopularMovie(popularData.results);
+        console.log(popularData.results);
+        
 
-    const getIdTrailerMovies = async () => {
-      try{
-    const idresponse = await fetch(`https://api.themoviedb.org/3/movie/${getIdMovies}//credits?language=en-US`)
-    const idres = await idresponse.json()
-    console.log(idres);
-      }
-    catch (error) {
-      console.log(error);
-      
-    }
-    }
-    useEffect(() => {
-      getIdTrailerMovies()
-    }, [])
-  }
+        // Fetch Top-Rated Movies
+        const topRatedRes = await fetch(
+          `https://api.themoviedb.org/3/movie/top_rated?api_key=${movieApiKey}`
+        );
+        const topRatedData = await topRatedRes.json();
+        setTopRated(topRatedData.results);
 
-
-
-
-  const getTopMovies = async () => {
-    try {
-      const rep = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${movieApiKey}`)
-      const res = await rep.json()
-      setTopRated(res.results)
-      console.log(res);
+        // Fetch Upcoming Movies
+        const upcomingRes = await fetch(
+          `https://api.themoviedb.org/3/movie/upcoming?api_key=${movieApiKey}`
+        );
+        const upcomingData = await upcomingRes.json();
+        setSelectedMovie(upcomingData.results);
+    }  catch(error) {
+      console.error("Error fetching movies:", error);
 
     }
-    catch (error) {
-      console.log(error);
-
-    }
-  }
-  useEffect(() => {
-    getTopMovies()
-  }, [])
-
-
-  const movieApiKey = "877ff59e9c1c2cdcec5fb423b387b410"
-
-  const getMovies = async () => {
-    try {
-      const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${movieApiKey}`)
-      const result = await response.json()
-      setSelectedMovie(result.results)
-      console.log(result);
-
-
-    }
-    catch (error) {
-      console.log(error);
-
-    }
-  }
-  useEffect(() => {
-    getMovies()
-  }, [])
-
+    };
+    fetchMovies();
+  }, []);
   return (<>
     <div className='relative mt-[59px] lg:mt-[83px] w-screen overflow-hidden'>
       <div className='flex -ml-10'>
@@ -141,31 +100,32 @@ export const Section = () => {
         </div>
         <div className='flex flex-wrap gap-5 lg:gap-8'>
           {selectedMovie?.map((movie, idx) => (
-
-            <a key={idx} onClick={ () => clickedTarget(movie)} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[230px]">
+            <div key={idx}>
+            <Link  href={`/detail/${movie?.id}`}  className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[230px]">
               <div className="overflow-hidden relative w-[157.5px] h-[234px] lg:w-[230px] lg:h-[340px]">
                 <span className="box-sizing:border-box;display:block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:absolute;top:0;left:0;bottom:0;right:0">
                   <img src={`https://image.tmdb.org/t/p/w500${movie?.poster_path}`} alt="" />
                 </span>
                 <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30">
                 </div>
-                </div>
-                  <div className="p-2">
-                    <div className="flex items-center gap-x-1">
-                      <Star />
-                      <div className="">
-                        <span className="text-foreground text-sm">
-                          {movie?.vote_average}
-                        </span>
-                        <span className="text-muted-foreground text-xs">
-                          /10
-                        </span>
-                      </div>
-                    </div>
-                    <h4 className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{movie?.original_title}</h4>
-
+              </div>
+              <div className="p-2">
+                <div className="flex items-center gap-x-1">
+                  <Star />
+                  <div className="">
+                    <span className="text-foreground text-sm">
+                      {movie?.vote_average}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      /10
+                    </span>
                   </div>
-            </a>
+                </div>
+                <h4 className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{movie?.original_title}</h4>
+
+              </div>
+            </Link>
+            </div>
           ))}
         </div>
       </div>
@@ -185,22 +145,22 @@ export const Section = () => {
                   <img src={`https://image.tmdb.org/t/p/w500${movie?.poster_path}`} alt="" />
                 </span>
                 <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30"></div></div>
-                  <div className="p-2">
-                    <div className="flex items-center gap-x-1">
-                      <Star />
-                      <div className="">
-                        <span className="text-foreground text-sm">
-                          {movie?.vote_average}
-                        </span>
-                        <span className="text-muted-foreground text-xs">
-                          /10
-                        </span>
-                      </div>
-                    </div>
-                    <h4 className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{movie?.original_title}</h4>
-
+              <div className="p-2">
+                <div className="flex items-center gap-x-1">
+                  <Star />
+                  <div className="">
+                    <span className="text-foreground text-sm">
+                      {movie?.vote_average}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      /10
+                    </span>
                   </div>
-  
+                </div>
+                <h4 className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{movie?.original_title}</h4>
+
+              </div>
+
             </a>
           ))}
 
@@ -224,22 +184,22 @@ export const Section = () => {
                 </span>
                 <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30">
                 </div>
-                </div>
-                  <div className="p-2">
-                    <div className="flex items-center gap-x-1">
-                      <Star />
-                      <div className="">
-                        <span className="text-foreground text-sm">
-                          {movie?.vote_average}
-                        </span>
-                        <span className="text-muted-foreground text-xs">
-                          /10
-                        </span>
-                      </div>
-                    </div>
-                    <h4 className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{movie?.original_title}</h4>
-
+              </div>
+              <div className="p-2">
+                <div className="flex items-center gap-x-1">
+                  <Star />
+                  <div className="">
+                    <span className="text-foreground text-sm">
+                      {movie?.vote_average}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      /10
+                    </span>
                   </div>
+                </div>
+                <h4 className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{movie?.original_title}</h4>
+
+              </div>
             </a>
           ))}
 
