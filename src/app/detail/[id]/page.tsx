@@ -93,7 +93,7 @@ const ExampleComponent = () => {
   return (
     <>
 <Header />
-<section className="page-detail text-foreground">
+<section className="ml-auto mr-auto min-h-[100vh] max-w-[1080px] p-[59px] text-foreground">
   <div className="mt-8 mb-4 px-5 flex justify-between lg:mt-[80px] lg:mb-6 lg:px-0">
     <div className="space-y-1">
       <h1 className="break-words text-2xl font-bold w-52 lg:w-fit lg:text-4xl">{posterValue?.title}</h1>
@@ -124,14 +124,36 @@ const ExampleComponent = () => {
     </div>
     <div className="relative">
       <div className="absolute inset-0 z-10 bg-black/40">
-      <div className="relative overflow-hidden w-[375px] lg:w-[760px] h-[211px] lg:h-[428px] lg:rounded">
+      <div className="relative overflow-hidden w-[480px] lg:w-[760px] h-[211px] lg:h-[428px] lg:rounded">
         <span className="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
-    <img className="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;" src={`https://image.tmdb.org/t/p/w500${posterValue?.backdrop_path}`} alt="" />
+    <img className="w-[100%]" src={`https://image.tmdb.org/t/p/w500${posterValue?.backdrop_path}`} alt="" />
         </span>
         </div>
         </div>
     </div>
   </div>
+  <div className="flex gap-x-[34px] lg:block">
+    <div className="space-y-5 mb-5">
+      <div className="flex flex-wrap gap-3">
+          {/* {posterValue?.genres.map((el,index) => (
+            <div key={index} className="inline-flex items-center border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground rounded-full text-xs">{el?.name}</div>
+          ))} */}
+      </div>
+    </div>
+  </div>
+  <div className="text-base">{posterValue?.overview}</div>
+  <div className="space-y-5 text-foreground mb-8">
+    <div className="space-y-1 ">
+      <div className="flex pb-1">
+        <h4 className="font-bold w-16 mr-13">Director</h4>
+        <div className="flex flex-1 flex-wrap">
+        </div>
+      </div>
+    </div>
+    <div className="space-y-1 "></div>
+    <div className="space-y-1 "></div>
+  </div>
+  <div className="flex flex-wrap gap-5 lg:gap-8"></div>
   </section>
 
 
