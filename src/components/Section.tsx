@@ -53,6 +53,26 @@ export const Section = () => {
     PopularMovies()
   }, [])
 
+  const clickedTarget = (movie) => {
+    const getIdMovies = movie.id
+    console.log(getIdMovies);
+
+    const getIdTrailerMovies = async () => {
+      try{
+    const idresponse = await fetch(`https://api.themoviedb.org/3/movie/${getIdMovies}//credits?language=en-US`)
+    const idres = await idresponse.json()
+    console.log(idres);
+      }
+    catch (error) {
+      console.log(error);
+      
+    }
+    }
+    useEffect(() => {
+      getIdTrailerMovies()
+    }, [])
+  }
+
 
 
 
@@ -122,12 +142,14 @@ export const Section = () => {
         <div className='flex flex-wrap gap-5 lg:gap-8'>
           {selectedMovie?.map((movie, idx) => (
 
-            <a key={idx} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[230px]">
+            <a key={idx} onClick={ () => clickedTarget(movie)} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[230px]">
               <div className="overflow-hidden relative w-[157.5px] h-[234px] lg:w-[230px] lg:h-[340px]">
                 <span className="box-sizing:border-box;display:block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:absolute;top:0;left:0;bottom:0;right:0">
                   <img src={`https://image.tmdb.org/t/p/w500${movie?.poster_path}`} alt="" />
                 </span>
                 <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30">
+                </div>
+                </div>
                   <div className="p-2">
                     <div className="flex items-center gap-x-1">
                       <Star />
@@ -143,8 +165,6 @@ export const Section = () => {
                     <h4 className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{movie?.original_title}</h4>
 
                   </div>
-                </div>
-              </div>
             </a>
           ))}
         </div>
@@ -164,7 +184,7 @@ export const Section = () => {
                 <span className="box-sizing:border-box;display:block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:absolute;top:0;left:0;bottom:0;right:0">
                   <img src={`https://image.tmdb.org/t/p/w500${movie?.poster_path}`} alt="" />
                 </span>
-                <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30">
+                <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30"></div></div>
                   <div className="p-2">
                     <div className="flex items-center gap-x-1">
                       <Star />
@@ -180,8 +200,7 @@ export const Section = () => {
                     <h4 className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{movie?.original_title}</h4>
 
                   </div>
-                </div>
-              </div>
+  
             </a>
           ))}
 
@@ -204,6 +223,8 @@ export const Section = () => {
                   <img src={`https://image.tmdb.org/t/p/w500${movie?.poster_path}`} alt="" />
                 </span>
                 <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30">
+                </div>
+                </div>
                   <div className="p-2">
                     <div className="flex items-center gap-x-1">
                       <Star />
@@ -219,8 +240,6 @@ export const Section = () => {
                     <h4 className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{movie?.original_title}</h4>
 
                   </div>
-                </div>
-              </div>
             </a>
           ))}
 
