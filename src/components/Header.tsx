@@ -1,3 +1,4 @@
+
 import MovieIcon from "@/app/icons/Movieicon";
 import ThemeSwitch from "./ThemeSwitch";
 import {
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import Search from "@/app/icons/Search";
+import Link from "next/link";
 
 type searchValue = string;
 
@@ -34,7 +36,7 @@ export const Header = () => {
       );
       const resuult = await respo.json();
       setListOfMovies(resuult.genres);
-      console.log(typeof resuult.genres);
+      console.log(" asdsads" + resuult.genres);
     } catch (error) {
       console.log(error);
     }
@@ -94,9 +96,13 @@ export const Header = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {listOfMovies.map((el, index) => (
-                    <SelectItem value="light" key={index}>
+                    <div key={index} >
+                      <Link href={`/genres/${el}`}>
+                    <SelectItem value="light">
                       {el.name}
                     </SelectItem>
+                    </Link>
+                    </div>
                   ))}
                 </SelectContent>
               </Select>

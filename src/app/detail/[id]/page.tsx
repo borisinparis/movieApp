@@ -2,6 +2,7 @@
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer"
+import { useSearchParams } from "next/navigation";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Star from "@/app/icons/Star"
@@ -17,10 +18,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
+
+
 
 type trailerSelected = {
   site: string
-  id:string
+  id: string
   key: string
 }
 type posterSelected = {
@@ -37,7 +50,7 @@ type similarSelected = {
   poster_path: string
   vote_average: number
   original_title: string
-  id:string
+  id: string
 
 }
 type creditSelected = {
@@ -49,15 +62,16 @@ type genresSelected = {
 const movieApiKey = "877ff59e9c1c2cdcec5fb423b387b410";
 
 const ExampleComponent = () => {
-  const [trailerValue, setTrailerValue] = useState<trailerSelected>({} as trailerSelected )
+  const [trailerValue, setTrailerValue] = useState<trailerSelected>({} as trailerSelected)
   const [posterValue, setIdPosterValue] = useState<posterSelected>({} as posterSelected)
   const [similarValue, setSimilarValue] = useState<similarSelected[]>([])
   const [creditValue, setCreditValue] = useState<creditSelected[]>([])
   const [genresValue, setGenresValue] = useState<genresSelected[]>([])
   const [filterValueSimilar, setFilterValueSimilar] = useState([])
+  const searchParams = useSearchParams()
+  const page = searchParams.get('page') || "1"
 
-
-
+  console.log('page', page)
 
 
   const params = useParams<{ id: string }>();
@@ -96,8 +110,6 @@ const ExampleComponent = () => {
         console.log(posterData, "poster DAta");
         setIdPosterValue(posterData)
         setGenresValue(posterData.genres)
-
-
 
 
 
@@ -216,35 +228,62 @@ const ExampleComponent = () => {
           <div className="flex flex-wrap gap-5 lg:gap-8">
             {similarValue.map((el, index) => (
               <div key={index}>
-              <Link href={`/detail/${el?.id}`} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[190px]">
-                <div className="overflow-hidden relative w-[157.5px] h-[234px] lg:w-[190px] lg:h-[281px]">
-                  <span className="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
-                    <img src={`https://image.tmdb.org/t/p/w500${el?.poster_path}`} alt="" />
-                  </span>
-                  <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30"></div>
-                </div>
-                <div className="p-2">
-                  <div className="flex items-center gap-x-1">
-                    <Star />
-                    <div className="font-medium">
-                      <span className="text-foreground text-sm">{el?.vote_average}</span>
-                      <span className="text-muted-foreground text-xs">/10</span>
-                    </div>
+                <Link href={`/detail/${el?.id}`} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[190px]">
+                  <div className="overflow-hidden relative w-[157.5px] h-[234px] lg:w-[190px] lg:h-[281px]">
+                    <span className="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
+                      <img src={`https://image.tmdb.org/t/p/w500${el?.poster_path}`} alt="" />
+                    </span>
+                    <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30"></div>
                   </div>
-                  <div className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{el?.original_title}</div>
-                </div>
-              </Link>
+                  <div className="p-2">
+                    <div className="flex items-center gap-x-1">
+                      <Star />
+                      <div className="font-medium">
+                        <span className="text-foreground text-sm">{el?.vote_average}</span>
+                        <span className="text-muted-foreground text-xs">/10</span>
+                      </div>
+                    </div>
+                    <div className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{el?.original_title}</div>
+                  </div>
+                </Link>
               </div>
             ))}
+
 
           </div>
         </div>
       </section>
 
+      <div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink >1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink >2</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink >3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+
+      </div>
 
       <Footer />
     </>
   );
 };
 
+// href={`/category/${movieId}/similar`}
 export default ExampleComponent;
