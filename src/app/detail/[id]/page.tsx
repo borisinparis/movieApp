@@ -67,7 +67,6 @@ const ExampleComponent = () => {
   const [similarValue, setSimilarValue] = useState<similarSelected[]>([])
   const [creditValue, setCreditValue] = useState<creditSelected[]>([])
   const [genresValue, setGenresValue] = useState<genresSelected[]>([])
-  const [filterValueSimilar, setFilterValueSimilar] = useState([])
   const searchParams = useSearchParams()
   const page = searchParams.get('page') || "1"
 

@@ -36,7 +36,8 @@ export const Header = () => {
       );
       const resuult = await respo.json();
       setListOfMovies(resuult.genres);
-      console.log(" asdsads" + resuult.genres);
+      console.log(resuult);
+      
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +52,7 @@ export const Header = () => {
       );
       const resul = await repo.json();
       setFilterMoviesAll(resul.results);
-      console.log(resul);
+      console.log(resul + " asdasd");
     } catch (error) {
       console.log(error);
     }
@@ -96,11 +97,9 @@ export const Header = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {listOfMovies.map((el, index) => (
-                    <div key={index} >
-                      <Link href={`/genres/${el}`}>
-                    <SelectItem value="light">
-                      {el.name}
-                    </SelectItem>
+                    <div key={index}>
+                    <Link href={`/genres`}>
+                      {el?.name}
                     </Link>
                     </div>
                   ))}
