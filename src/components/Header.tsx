@@ -22,6 +22,7 @@ type MoviesAll = {
 };
 type Name = {
   name: string;
+  id:number
 };
 
 export const Header = () => {
@@ -98,7 +99,7 @@ export const Header = () => {
                 <SelectContent>
                   {listOfMovies.map((el, index) => (
                     <div key={index}>
-                    <Link href={`/genres`}>
+                    <Link href={`/genres?page=1&genrelds=${el.id}`}>
                       {el?.name}
                     </Link>
                     </div>
