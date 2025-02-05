@@ -32,15 +32,9 @@ const ExampleComponent = () => {
     const [selectedMovie, setSelectedMovie] = useState<Movie[]>([])
     const [page,setPage] = useState(1)
 
-
-
-    // const searchParams = useSearchParams()
-    // const page = searchParams.get('page') || "1"
-
-      const searchParams = useSearchParams(); // Read-only search params
+      const searchParams = useSearchParams(); 
       const router = useRouter(); 
     
-    // console.log('all page', page)
 
       const createQueryString = useCallback(
 
@@ -53,17 +47,6 @@ const ExampleComponent = () => {
       );
 
       const handlePageChange = (direction: "next" | "prev") => {
-        // Get current page from URL, default to 1
-        // let currentPage = Number(searchParams.get("page")) || 1;
-    
-        // Increase or decrease page number based on direction
-        // let newPage = direction === "next" ? currentPage + 1 : Math.max(1, currentPage - 1);
-    
-        // Update the URL
-        // const newQueryString = createQueryString("page", `${newPage}`);
-        // router.push(`?${newQueryString}`);
-        // console.log(typeof(newPage));
-        // setCategoryId(newPage)
         let newPage = direction === "next" ? page + 1 : Math.max(1, page - 1);
 
         setPage(newPage)
@@ -82,7 +65,7 @@ const ExampleComponent = () => {
 
         }
 
-        console.log("Movie ID type:", typeof params.categoryName);
+        console.log("Movie ID type:", params.categoryName);
 
 
 

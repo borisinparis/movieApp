@@ -1,74 +1,108 @@
 'use client'
+
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { useEffect, useState } from "react"
+import {useEffect, useState } from "react"
 import Link from "next/link";
 import Star from "@/app/icons/Star"
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
 
-type Name = {
+
+type Genre = {
     name: string;
+    id: number
 };
-type Popular = {
+type Movie = {
     title: string
     vote_average: number
     poster_path: string
     original_title: string
     id: string
     total_results: number
-
-}
-type genres = {
+    genre_ids: number[]
+};
+type GetGenreMoviesResponse = {
+    page: number
+    results: Movie[]
+    total_pages: number
     total_results: number
 }
+
+
 const movieApiKey = "877ff59e9c1c2cdcec5fb423b387b410";
+
 const ExampleComponent = () => {
-    const [genresValue, setGenresValue] = useState<genres>({} as genres)
-    const [listOfMovies, setListOfMovies] = useState<Name[]>([]);
-    const [teaserMovies, setTeaserMovies] = useState<Popular[]>([])
-    const searchParams = useSearchParams()
-    const selectedGenres = searchParams.get('genres')
-    const genresArray = selectedGenres ? selectedGenres.split(',') : [];
-    console.log(genresArray);
-    const [genresIdValue, setGenresIdValue] = useState([])
+    const [genresValue, setGenresValue] = useState<Genre[]>([]);
+    const [listOfMovies, setListOfMovies] = useState<GetGenreMoviesResponse>({} as GetGenreMoviesResponse);
+    const searchParams = useSearchParams();
+    const selectedGenres = (searchParams.get('genrelds') || '').split(',');
+    console.log(selectedGenres + " selected ");
+    const [pageValue,setPageValue] =useState("1")
     
     
+    const router = useRouter()
 
 
+    const handlePageChange = (direction: "next" | "prev") => {
+        if(direction=== "next") {
+           let newPage = (Number(pageValue) + 1).toString()
+           setPageValue(newPage)
+           router.push(`/genres?page=${newPage}&genresId=${selectedGenres}`)
+        }
+        
+      };
+      
 
-    // console.log()
-    // searchParams.values((cur) => console.log(cur))
+    const getGenres = async () => {
+        const respo = await fetch(
+            `https://api.themoviedb.org/3/genre/movie/list?api_key=${movieApiKey}`
+        );
+        const resuult = await respo.json();
+        setGenresValue(resuult.genres);
+    }
 
+    const getGenreMovies = async () => {
+        const movieResponses = await fetch(`https://api.themoviedb.org/3/discover/movie?language=en&with_genres=${selectedGenres}&page=${pageValue}&api_key=${movieApiKey}`);
+        const movies = await movieResponses.json();
+        setListOfMovies(movies)
+        console.log(movies);
+        
+    }
 
     useEffect(() => {
-        const fetchMovies = async () => {
-            try {
-                const genresMovieResponse = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${movieApiKey}`)
-                const genresData = await genresMovieResponse.json();
-                setGenresValue(genresData)
-                console.log(genresData);
-                setTeaserMovies(genresData.results)
-                setGenresIdValue(genresData.results)
+        getGenres();
+        const page = searchParams.get('page') || '1'
+        console.log(page);
+    
+        setPageValue(page)
+    }, [pageValue]);
+    
+    useEffect(() => {
+        getGenreMovies();
+    }, [searchParams]);
 
+    const handleGenreClick = (genreId: string) => {
 
-                const respo = await fetch(
-                    `https://api.themoviedb.org/3/genre/movie/list?api_key=${movieApiKey}`
-                );
-                const resuult = await respo.json();
-                setListOfMovies(resuult.genres);
-                console.log(resuult);
+        const params = new URLSearchParams(searchParams.toString());  
 
+        selectedGenres.push(genreId);
 
+        params.set('genrelds', selectedGenres.join(','));
+        const newQueryString = params.toString()
+        console.log(newQueryString + " tata");
+        
+        router.push(`?${newQueryString}`)
 
-
-
-            }
-            catch (error) {
-                console.log("error fetchin");
-
-            }
-        }; fetchMovies()
-    }, [])
+    };
 
     return (
         <>
@@ -84,18 +118,25 @@ const ExampleComponent = () => {
                                     <p className="text-base">See lists of movies by genre</p>
                                 </div>
                                 <div className="flex flex-wrap gap-4">
-                                    {listOfMovies.map((el, index) => (
-                                        <div key={index} className="inline-flex items-center border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground rounded-full cursor-pointer">{el?.name}</div>
+                                    {genresValue.map((el) => (
+                                        <div key={el.id}>
+                                            <button
+                                                onClick={() => handleGenreClick(el.id.toString())
+
+                                                }
+                                                className="inline-flex items-center border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground rounded-full cursor-pointer">
+                                                {el?.name}
+                                            </button>
+                                        </div>
                                     ))}
                                 </div>
                             </div>
                         </div>
-                        <div role="none" className="MovieZ - Filter Your Favorite Movies"></div>
                         <div className="flex-1 space-y-8 lg:pr-12">
-                            <h4 className="text-xl text-foreground font-semibold">{genresValue.total_results} "titles"</h4>
+                            <h4 className="text-xl text-foreground font-semibold">{listOfMovies.total_results} "titles"</h4>
                             <div className="flex flex-wrap gap-5 lg:gap-x-12 lg:gap-y-8">
-                                {teaserMovies.map((el, index) => (
-                                    <div key={index}>
+                                {listOfMovies.results?.map((el) => (
+                                    <div key={el.id}>
                                         <Link href={`/detail/${el?.id}`} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[190px]">
                                             <div className="overflow-hidden relative w-[157.5px] h-[234px] lg:w-[190px] lg:h-[281px]">
                                                 <span className="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
@@ -117,15 +158,35 @@ const ExampleComponent = () => {
                                     </div>
                                 ))}
                             </div>
-
-
                         </div>
                     </div>
                 </div>
-
             </section>
+                        <div>
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious />
+                                    </PaginationItem>
+                                    <PaginationItem>
+                                        <PaginationLink></PaginationLink>
+                                    </PaginationItem>
+                                    <PaginationItem>
+                                        <PaginationLink ></PaginationLink>
+                                    </PaginationItem>
+                                    <PaginationItem>
+                                        <PaginationEllipsis />
+                                    </PaginationItem>
+                                    <PaginationItem>
+                                        <PaginationNext onClick={() => handlePageChange("next")} />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+            
+                        </div>
             <Footer />
         </>
     )
-}
-export default ExampleComponent
+};
+
+export default ExampleComponent;

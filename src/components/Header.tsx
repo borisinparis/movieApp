@@ -53,7 +53,7 @@ export const Header = () => {
       );
       const resul = await repo.json();
       setFilterMoviesAll(resul.results);
-      console.log(resul + " asdasd");
+      console.log(resul);
     } catch (error) {
       console.log(error);
     }
