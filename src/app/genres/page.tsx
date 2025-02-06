@@ -45,18 +45,39 @@ const ExampleComponent = () => {
     const [listOfMovies, setListOfMovies] = useState<GetGenreMoviesResponse>({} as GetGenreMoviesResponse);
     const searchParams = useSearchParams();
     const selectedGenres = (searchParams.get('genrelds') || '').split(',');
+    const selectedPage = (searchParams.get("page") ||  "1")
+    
     console.log(selectedGenres + " selected ");
-    const [pageValue,setPageValue] =useState("1")
     
     
     const router = useRouter()
+    console.log(router);
+    
 
 
     const handlePageChange = (direction: "next" | "prev") => {
         if(direction=== "next") {
-           let newPage = (Number(pageValue) + 1).toString()
-           setPageValue(newPage)
-           router.push(`/genres?page=${newPage}&genresId=${selectedGenres}`)
+           let newPage = (Number(selectedPage) + 1).toString()
+            const params = new URLSearchParams(searchParams.toString())
+            console.log(params);
+            params.set('page' ,newPage)
+            const newQueryString = params.toString()
+            console.log(newQueryString + " sonirhol");
+            router.push(`?${newQueryString}`)
+            
+            
+
+
+            
+
+        } else if (direction === "prev") {
+            let newPage = (Number(selectedPage) - 1).toString()
+            const params = new URLSearchParams(searchParams.toString())
+            console.log(params);
+            params.set('page' ,newPage)
+            const newQueryString = params.toString()
+            console.log(newQueryString + " sonirhol");
+            router.push(`?${newQueryString}`)
         }
         
       };
@@ -71,7 +92,7 @@ const ExampleComponent = () => {
     }
 
     const getGenreMovies = async () => {
-        const movieResponses = await fetch(`https://api.themoviedb.org/3/discover/movie?language=en&with_genres=${selectedGenres}&page=${pageValue}&api_key=${movieApiKey}`);
+        const movieResponses = await fetch(`https://api.themoviedb.org/3/discover/movie?language=en&with_genres=${selectedGenres}&page=${selectedPage}&api_key=${movieApiKey}`);
         const movies = await movieResponses.json();
         setListOfMovies(movies)
         console.log(movies);
@@ -80,11 +101,7 @@ const ExampleComponent = () => {
 
     useEffect(() => {
         getGenres();
-        const page = searchParams.get('page') || '1'
-        console.log(page);
-    
-        setPageValue(page)
-    }, [pageValue]);
+    }, []);
     
     useEffect(() => {
         getGenreMovies();
@@ -93,12 +110,20 @@ const ExampleComponent = () => {
     const handleGenreClick = (genreId: string) => {
 
         const params = new URLSearchParams(searchParams.toString());  
+        console.log(params + " sonirhol" );
 
         selectedGenres.push(genreId);
+
+
+
+
 
         params.set('genrelds', selectedGenres.join(','));
         const newQueryString = params.toString()
         console.log(newQueryString + " tata");
+
+        
+
         
         router.push(`?${newQueryString}`)
 
@@ -166,7 +191,7 @@ const ExampleComponent = () => {
                             <Pagination>
                                 <PaginationContent>
                                     <PaginationItem>
-                                        <PaginationPrevious />
+                                        <PaginationPrevious onClick={() => handlePageChange("prev")} />
                                     </PaginationItem>
                                     <PaginationItem>
                                         <PaginationLink></PaginationLink>
