@@ -130,14 +130,11 @@ const ExampleComponent = () => {
                         <PaginationItem>
                             <PaginationPrevious onClick={() => handlePageChange("prev")} />
                         </PaginationItem>
-                        {/* <PaginationItem>
-                            <PaginationLink>{ }</PaginationLink>
-                        </PaginationItem> */}
                         <PaginationItem>
-                            <PaginationLink>{page}</PaginationLink>
+                            <PaginationLink></PaginationLink>
                         </PaginationItem>
                         <PaginationItem>
-                            <PaginationLink >{page+1}</PaginationLink>
+                            <PaginationLink ></PaginationLink>
                         </PaginationItem>
                         <PaginationItem>
                             <PaginationEllipsis />
