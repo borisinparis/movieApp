@@ -4,7 +4,7 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import Star from "@/app/icons/Star"
 import { useParams } from "next/navigation";
-import { useSearchParams,useRouter } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { useCallback } from "react"
 import {
@@ -30,28 +30,11 @@ const movieApiKey = "877ff59e9c1c2cdcec5fb423b387b410"
 const ExampleComponent = () => {
 
     const [selectedMovie, setSelectedMovie] = useState<Movie[]>([])
-    const [page,setPage] = useState(1)
 
-      const searchParams = useSearchParams(); 
-      const router = useRouter(); 
-    
 
-      const createQueryString = useCallback(
-
-        (name: string, value: string) => {
-          const params = new URLSearchParams(searchParams.toString());
-          params.set(name, value.toString());
-          return params.toString();
-        },
-        [searchParams]
-      );
-
-      const handlePageChange = (direction: "next" | "prev") => {
-        let newPage = direction === "next" ? page + 1 : Math.max(1, page - 1);
-
-        setPage(newPage)
-        
-      };
+    const searchParams = useSearchParams();
+    const selectedPage = (searchParams.get("page") || '1')
+    const router = useRouter()
 
 
     const params = useParams<{ categoryName: string }>();
@@ -72,7 +55,7 @@ const ExampleComponent = () => {
         const fetchMovies = async (categoryId: string) => {
             try {
                 const popularResponse = await fetch(
-                    `https://api.themoviedb.org/3/movie/${categoryId}?api_key=${movieApiKey}&page=${page}`
+                    `https://api.themoviedb.org/3/movie/${categoryId}?page=${selectedPage}&api_key=${movieApiKey}`
                 );
                 const popularData = await popularResponse.json();
                 setSelectedMovie(popularData.results)
@@ -86,7 +69,36 @@ const ExampleComponent = () => {
         };
         fetchMovies(params.categoryName);
 
-    }, [params.categoryName,page])
+    }, [params.categoryName,searchParams])
+
+
+
+
+    const handlePageChange = (direction: "next" | "prev") => {
+        if (direction === "next") {
+            let newPage = (Number(selectedPage) + 1).toString()
+            const params = new URLSearchParams(searchParams.toString())
+            params.set("page", newPage)
+            const newQueryString = params.toString()
+            console.log(newQueryString);
+            router.push(`?${newQueryString}`)
+
+
+        }
+        if (direction === "prev") {
+            let newPage = (Number(selectedPage) - 1).toString()
+            const params = new URLSearchParams(searchParams.toString())
+            params.set("page", newPage)
+            const newQueryString = params.toString()
+            console.log(newQueryString);
+            router.push(`?${newQueryString}`)
+
+
+
+        }
+
+
+    };
 
     return (
         <>

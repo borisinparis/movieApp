@@ -47,7 +47,6 @@ const ExampleComponent = () => {
     const selectedGenres = (searchParams.get('genrelds') || '').split(',');
     const selectedPage = (searchParams.get("page") ||  "1")
     
-    console.log(selectedGenres + " selected ");
     
     
     const router = useRouter()
