@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import Search from "@/app/icons/Search";
 import Link from "next/link";
+import { Skeleton } from "./ui/skeleton";
 
 type searchValue = string;
 
@@ -22,11 +23,12 @@ type MoviesAll = {
 };
 type Name = {
   name: string;
-  id:number
+  id: number
 };
 
 export const Header = () => {
   const [filterMoviesAll, setFilterMoviesAll] = useState<MoviesAll[]>([]);
+  const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState<searchValue>("");
   const [listOfMovies, setListOfMovies] = useState<Name[]>([]);
 
@@ -38,7 +40,7 @@ export const Header = () => {
       const resuult = await respo.json();
       setListOfMovies(resuult.genres);
       console.log(resuult);
-      
+
     } catch (error) {
       console.log(error);
     }
@@ -48,14 +50,17 @@ export const Header = () => {
 
   const moviesSearch = async () => {
     try {
+      setLoading(true);
       const repo = await fetch(
         `https://api.themoviedb.org/3/search/movie?query=${searchValue}&language=en-US&page=1&api_key=${movieApiKey}`
       );
       const resul = await repo.json();
       setFilterMoviesAll(resul.results);
       console.log(resul);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -99,9 +104,9 @@ export const Header = () => {
                 <SelectContent>
                   {listOfMovies.map((el, index) => (
                     <div key={index}>
-                    <Link href={`/genres?page=1&genrelds=${el.id}`}>
-                      {el?.name}
-                    </Link>
+                      <Link href={`/genres?page=1&genrelds=${el.id}`}>
+                        {el?.name}
+                      </Link>
                     </div>
                   ))}
                 </SelectContent>
@@ -117,7 +122,18 @@ export const Header = () => {
                 type="text"
               />
             </div>
-            </div>
+          </div>
+          <div className="absolute top-20 left-10 space-y-3 bg-white p-5 rounded-md">
+
+            {loading && <>
+              <Skeleton className="w-16 h-16" />
+              <Skeleton className="w-16 h-16" />
+              <Skeleton className="w-16 h-16" />
+              <Skeleton className="w-16 h-16" />
+              <Skeleton className="w-16 h-16" />
+              <Skeleton className="w-16 h-16" />
+            </>}
+
             {filterMoviesAll.map((el, index) => (
               <div
                 key={index}
@@ -146,9 +162,10 @@ export const Header = () => {
                 </div>
               </div>
             ))}
-            <div className="flex items-center gap-x-3">
-              <ThemeSwitch />
-            </div>
+          </div>
+          <div className="flex items-center gap-x-3">
+            <ThemeSwitch />
+          </div>
         </div>
       </header>
     </>

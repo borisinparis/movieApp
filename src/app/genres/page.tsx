@@ -2,9 +2,7 @@
 
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import {useEffect, useState } from "react"
-import Link from "next/link";
-import Star from "@/app/icons/Star"
+import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     Pagination,
@@ -15,6 +13,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import { SectionCard } from "@/components/SectionCard";
 
 
 type Genre = {
@@ -45,42 +44,42 @@ const ExampleComponent = () => {
     const [listOfMovies, setListOfMovies] = useState<GetGenreMoviesResponse>({} as GetGenreMoviesResponse);
     const searchParams = useSearchParams();
     const selectedGenres = (searchParams.get('genrelds') || '').split(',');
-    const selectedPage = (searchParams.get("page") ||  "1")
-    
-    
-    
+    const selectedPage = (searchParams.get("page") || "1")
+
+
+
     const router = useRouter()
     console.log(router);
-    
+
 
 
     const handlePageChange = (direction: "next" | "prev") => {
-        if(direction=== "next") {
-           let newPage = (Number(selectedPage) + 1).toString()
+        if (direction === "next") {
+            let newPage = (Number(selectedPage) + 1).toString()
             const params = new URLSearchParams(searchParams.toString())
             console.log(params);
-            params.set('page' ,newPage)
+            params.set('page', newPage)
             const newQueryString = params.toString()
             console.log(newQueryString + " sonirhol");
             router.push(`?${newQueryString}`)
-            
-            
 
 
-            
+
+
+
 
         } else if (direction === "prev") {
             let newPage = (Number(selectedPage) - 1).toString()
             const params = new URLSearchParams(searchParams.toString())
             console.log(params);
-            params.set('page' ,newPage)
+            params.set('page', newPage)
             const newQueryString = params.toString()
             console.log(newQueryString + " sonirhol");
             router.push(`?${newQueryString}`)
         }
-        
-      };
-      
+
+    };
+
 
     const getGenres = async () => {
         const respo = await fetch(
@@ -95,21 +94,21 @@ const ExampleComponent = () => {
         const movies = await movieResponses.json();
         setListOfMovies(movies)
         console.log(movies);
-        
+
     }
 
     useEffect(() => {
         getGenres();
     }, []);
-    
+
     useEffect(() => {
         getGenreMovies();
     }, [searchParams]);
 
     const handleGenreClick = (genreId: string) => {
 
-        const params = new URLSearchParams(searchParams.toString());  
-        console.log(params + " sonirhol" );
+        const params = new URLSearchParams(searchParams.toString());
+        console.log(params + " sonirhol");
 
         selectedGenres.push(genreId);
 
@@ -121,9 +120,9 @@ const ExampleComponent = () => {
         const newQueryString = params.toString()
         console.log(newQueryString + " tata");
 
-        
 
-        
+
+
         router.push(`?${newQueryString}`)
 
     };
@@ -160,25 +159,8 @@ const ExampleComponent = () => {
                             <h4 className="text-xl text-foreground font-semibold">{listOfMovies.total_results} "titles"</h4>
                             <div className="flex flex-wrap gap-5 lg:gap-x-12 lg:gap-y-8">
                                 {listOfMovies.results?.map((el) => (
-                                    <div key={el.id}>
-                                        <Link href={`/detail/${el?.id}`} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[190px]">
-                                            <div className="overflow-hidden relative w-[157.5px] h-[234px] lg:w-[190px] lg:h-[281px]">
-                                                <span className="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
-                                                    <img src={`https://image.tmdb.org/t/p/w500${el?.poster_path}`} alt="" />
-                                                </span>
-                                                <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30"></div>
-                                            </div>
-                                            <div className="p-2">
-                                                <div className="flex items-center gap-x-1">
-                                                    <Star />
-                                                    <div className="font-medium">
-                                                        <span className="text-foreground text-sm">{el?.vote_average}</span>
-                                                        <span className="text-muted-foreground text-xs">/10</span>
-                                                    </div>
-                                                </div>
-                                                <div className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{el?.original_title}</div>
-                                            </div>
-                                        </Link>
+                                    <div key={el.id} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[230px]" >
+                                        <SectionCard {...el} />
                                     </div>
                                 ))}
                             </div>
@@ -186,28 +168,28 @@ const ExampleComponent = () => {
                     </div>
                 </div>
             </section>
-                        <div>
-                            <Pagination>
-                                <PaginationContent>
-                                    <PaginationItem>
-                                        <PaginationPrevious onClick={() => handlePageChange("prev")} />
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationLink></PaginationLink>
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationLink ></PaginationLink>
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationEllipsis />
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationNext onClick={() => handlePageChange("next")} />
-                                    </PaginationItem>
-                                </PaginationContent>
-                            </Pagination>
-            
-                        </div>
+            <div>
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious onClick={() => handlePageChange("prev")} />
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationLink></PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationLink ></PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationEllipsis />
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationNext onClick={() => handlePageChange("next")} />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+
+            </div>
             <Footer />
         </>
     )

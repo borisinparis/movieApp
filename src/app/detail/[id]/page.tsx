@@ -27,6 +27,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { SectionCard } from "@/components/SectionCard";
 
 
 
@@ -159,8 +160,8 @@ const ExampleComponent = () => {
         </div>
         <div className="flex gap-x-8 mb-8">
           <div className="overflow-hidden relative hidden lg:block w-[290px] h-[428px] rounded">
-            <span className="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
-              <img src={`https://image.tmdb.org/t/p/w500${posterValue?.poster_path}`} alt="" />
+            <span className="w-full absolute h-[428px] ">
+              <img src={`https://image.tmdb.org/t/p/w500${posterValue?.poster_path}`} alt="" className="position absolute inset-0 box-border p-0 border-none m-auto block w-0 h-0 min-w-[100%] max-w-[100%] min-h-[100%] object-cover;" />
             </span>
             <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30"></div>
           </div>
@@ -216,7 +217,7 @@ const ExampleComponent = () => {
           <div className="space-y-1 "></div>
           <div className="space-y-1 "></div>
         </div>
-        <div className="pb-8 lg:pb-[112.62px]">
+        <div className="pb-8 lg:pb-[130.62px]">
           <div className="flex justify-between mb-8">
             <h3 className="text-2xl font-semibold">More like this</h3>
             <a href="" className="flex items-center">
@@ -224,27 +225,10 @@ const ExampleComponent = () => {
               <RightArrow />
             </a>
           </div>
-          <div className="flex flex-wrap gap-5 lg:gap-8">
+          <div className="flex flex-wrap gap-7 lg:gap-8">
             {similarValue.map((el, index) => (
-              <div key={index}>
-                <Link href={`/detail/${el?.id}`} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[190px]">
-                  <div className="overflow-hidden relative w-[157.5px] h-[234px] lg:w-[190px] lg:h-[281px]">
-                    <span className="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
-                      <img src={`https://image.tmdb.org/t/p/w500${el?.poster_path}`} alt="" />
-                    </span>
-                    <div className="absolute inset-0 z-10 transition-all duration-300 group-hover:bg-primary/30"></div>
-                  </div>
-                  <div className="p-2">
-                    <div className="flex items-center gap-x-1">
-                      <Star />
-                      <div className="font-medium">
-                        <span className="text-foreground text-sm">{el?.vote_average}</span>
-                        <span className="text-muted-foreground text-xs">/10</span>
-                      </div>
-                    </div>
-                    <div className="h-14 overflow-hidden text-ellipsis line-clamp-2 text-lg text-foreground">{el?.original_title}</div>
-                  </div>
-                </Link>
+              <div key={index} className="group w-[157.5px] overflow-hidden rounded-lg bg-secondary space-y-1 lg:w-[230px]">
+                <SectionCard {...el} />
               </div>
             ))}
 

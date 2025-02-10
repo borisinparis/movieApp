@@ -162,7 +162,7 @@ const CarouselContent = React.forwardRef<
         ref={ref}
         className={cn(
           "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+          orientation === "horizontal" ? "-ml-10" : "-mt-4 flex-col",
           className
         )}
         {...props}
@@ -197,7 +197,7 @@ CarouselItem.displayName = "CarouselItem"
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+>(({ className="absolute left-[20px]" , variant = "outline", size = "icon", ...props }, ref) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
 
   return (
@@ -226,7 +226,7 @@ CarouselPrevious.displayName = "CarouselPrevious"
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+>(({ className="absolute right-[20px]", variant = "outline", size = "icon", ...props }, ref) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
 
   return (
