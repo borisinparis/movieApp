@@ -2,10 +2,8 @@
 import React, { useEffect, useState } from "react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import Star from "@/app/icons/Star"
 import { useParams } from "next/navigation";
 import { useSearchParams, useRouter } from "next/navigation"
-import Link from "next/link"
 import {
     Pagination,
     PaginationContent,
@@ -59,6 +57,8 @@ const ExampleComponent = () => {
                 );
                 const popularData = await popularResponse.json();
                 setSelectedMovie(popularData.results)
+                console.log(popularData);
+                
 
             }
             catch (error) {

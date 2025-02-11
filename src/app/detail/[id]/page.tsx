@@ -18,19 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
 import { SectionCard } from "@/components/SectionCard";
-
-
-
 
 type trailerSelected = {
   site: string
@@ -75,6 +63,8 @@ const ExampleComponent = () => {
 
 
   const params = useParams<{ id: string }>();
+  console.log(params);
+  
 
   useEffect(() => {
     if (!params.id) {
@@ -220,10 +210,10 @@ const ExampleComponent = () => {
         <div className="pb-8 lg:pb-[130.62px]">
           <div className="flex justify-between mb-8">
             <h3 className="text-2xl font-semibold">More like this</h3>
-            <a href="" className="flex items-center">
+            <Link href={`/category/${params.id}/similar`} className="flex items-center">
               <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary underline-offset-4 hover:underline h-9 px-4 py-2"> See More</button>
               <RightArrow />
-            </a>
+            </Link>
           </div>
           <div className="flex flex-wrap gap-7 lg:gap-8">
             {similarValue.map((el, index) => (
@@ -237,36 +227,9 @@ const ExampleComponent = () => {
         </div>
       </section>
 
-      <div>
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink >1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink >2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink >3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-
-      </div>
-
       <Footer />
     </>
   );
 };
 
-// href={`/category/${movieId}/similar`}
 export default ExampleComponent;
