@@ -4,15 +4,6 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
 import { SectionCard } from "@/components/SectionCard";
 import { DynamicPagination } from "@/components/DynamicPagination";
 
@@ -47,6 +38,7 @@ const ExampleComponent = () => {
     const selectedGenres = (searchParams.get('genrelds') || '').split(',');
     const selectedPage = (searchParams.get("page") || "1")
     const [totalPage,setTotalPage] = useState<number>(1)
+    const [activeButton,setActiveButton] = useState(null)
 
     const router = useRouter()
     console.log(router);
@@ -79,11 +71,12 @@ const ExampleComponent = () => {
 
         const params = new URLSearchParams(searchParams.toString());
         console.log(params + " sonirhol");
-        selectedGenres.push(genreId);
+        selectedGenres.push(genreId);   
         params.set('genrelds', selectedGenres.join(','));
         const newQueryString = params.toString()
         console.log(newQueryString + " tata");
         router.push(`?${newQueryString}`)
+        setActiveButton(genreId)
 
     };
 
@@ -106,7 +99,8 @@ const ExampleComponent = () => {
                                             <button
                                                 onClick={() => handleGenreClick(el.id.toString())
                                                 }
-                                                className="inline-flex items-center border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground rounded-full cursor-pointer">
+                                                className={`inline-flex items-center border${activeButton==el.id ? 'bg-blue-500 text-white' : 'bg-red-200'}`}
+                                 >
                                                 {el?.name}
                                             </button>
                                         </div>

@@ -136,7 +136,7 @@ export const Header = () => {
                 <Skeleton className="w-16 h-16" />
               </>}
               <div className="absolute top-[60px]">
-
+                
               {filterMoviesAll .slice(0, 5).map((el, index) => (
                 <div className="rounded-xl border bg-card text-card-foreground shadow search-result p-3 h-[500px] lg:h-auto overflow-y-auto">
                   <Link className="flex gap-x-4 p-2 hover:bg-muted rounded-md" href={`/detail/${el.id}`}>
