@@ -13,9 +13,11 @@ export default function Home() {
 
   return (
     <>
+    <div className='h-fit'>
       <Header />
       <Section />
       <Footer />
+      </div>
     </>
   )
 }

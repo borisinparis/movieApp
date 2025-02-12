@@ -166,21 +166,19 @@ const ExampleComponent = () => {
               <div className="flex items-center space-x-3 text-white">
                 <div>
                   <Dialog>
-                    <DialogTrigger>Open</DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Are you absolutely sure?</DialogTitle>
-                        <DialogDescription>
-                          <div>
+                    <DialogTrigger>
+                      <div className="text-secondary-foreground bg-background px-2 py-1 rounded-md">
+                        Watch trailer
+                      </div>
+                      </DialogTrigger>
+                    <DialogContent className="w-fit max-w-screen">
+                    <DialogTitle></DialogTitle>
+                        <DialogDescription></DialogDescription>
                             <ReactPlayer url={`https://www.youtube.com/watch?v=${trailerValue?.key}`} />
-                          </div>
-                        </DialogDescription>
-                      </DialogHeader>
                     </DialogContent>
                   </Dialog>
                 </div>
                 <Play />
-                <span>Play trailer</span>
               </div>
             </div>
 

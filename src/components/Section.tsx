@@ -11,6 +11,8 @@ import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import LoadingPage from "@/components/loading"
 import { SectionCard } from "./SectionCard"
+import Autoplay from "embla-carousel-autoplay";
+import { Slide } from '@/components/Slide';
 
 type Movie = {
   id: string,
@@ -18,6 +20,7 @@ type Movie = {
   vote_average: number
   poster_path: string
   original_title: string
+  adult: number
 }
 type Top = {
   title: string
@@ -25,14 +28,6 @@ type Top = {
   poster_path: string
   original_title: string
   id: string
-}
-type Popular = {
-  title: string
-  vote_average: number
-  poster_path: string
-  original_title: string
-  id: string
-
 }
 const movieApiKey = "877ff59e9c1c2cdcec5fb423b387b410"
 
@@ -80,7 +75,6 @@ export const Section = () => {
       } catch (error) {
         console.error("Error fetching movies:", error);
         setLoading(false);
-
       }
     };
     fetchMovies();
@@ -90,14 +84,24 @@ export const Section = () => {
     {loading && <>
       <LoadingPage />
     </>
-
     }
-    <div className='relative w-[1290px] m-auto '>
-      <Carousel className="w-full">
+    <div>
+      <Carousel
+        className="w-screen h-[600px]"
+        plugins={[Autoplay({ delay: 5000 })]}
+        opts={{
+          loop: true,
+        }}>
         <CarouselContent>
-          <CarouselItem><img className='w-[100%] h-full' src="coverpng.jpeg" alt="" /></CarouselItem>
-          <CarouselItem><img className="w-[100%] h-full" src="coverpng.jpeg" /></CarouselItem>
-          <CarouselItem> < img className="w-[100%] h-full" src="coverpng.jpeg" /></CarouselItem>
+          {popularMovie?.map((movie, index) => {
+            const imageUrl = `https://image.tmdb.org/t/p` + '/original' + movie?.backdrop_path;
+            return (
+              <CarouselItem key={index} className="h-[600px]">
+                <Slide movie={movie} imageUrl={imageUrl} />
+
+              </CarouselItem>
+            )
+          })}
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
@@ -119,10 +123,7 @@ export const Section = () => {
             </div>
           ))}
         </div>
-
       </div>
-
-
       <div className='w-[80%] m-auto'>
         <div className='flex items-center justify-between'>
           <h3 className='text-foreground text-2xl font-semibold'>Popular </h3>
@@ -138,16 +139,12 @@ export const Section = () => {
             </div>
           ))}
         </div>
-
       </div>
-
-
-
-        <div className="w-[80%] m-auto">
+      <div className="w-[80%] m-auto">
         <div className="flex items-center justify-between">
           <h3 className="text-foreground text-2xl font-semibold">Top-rated</h3>
           <Link className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary underline-offset-4 hover:underline h-9 px-4 py-2" href={`/category/${category[1].name}`}>
-          "See more"
+            "See more"
             <RightArrow />
           </Link>
         </div>
@@ -157,11 +154,9 @@ export const Section = () => {
               <SectionCard {...movie} />
             </div>
           ))}
-
-
-        </div>
         </div>
       </div>
+    </div>
   </>)
 }
 export default Section

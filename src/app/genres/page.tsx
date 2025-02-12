@@ -14,6 +14,7 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 import { SectionCard } from "@/components/SectionCard";
+import { DynamicPagination } from "@/components/DynamicPagination";
 
 
 type Genre = {
@@ -45,41 +46,10 @@ const ExampleComponent = () => {
     const searchParams = useSearchParams();
     const selectedGenres = (searchParams.get('genrelds') || '').split(',');
     const selectedPage = (searchParams.get("page") || "1")
-
-
+    const [totalPage,setTotalPage] = useState<number>(1)
 
     const router = useRouter()
     console.log(router);
-
-
-
-    const handlePageChange = (direction: "next" | "prev") => {
-        if (direction === "next") {
-            let newPage = (Number(selectedPage) + 1).toString()
-            const params = new URLSearchParams(searchParams.toString())
-            console.log(params);
-            params.set('page', newPage)
-            const newQueryString = params.toString()
-            console.log(newQueryString + " sonirhol");
-            router.push(`?${newQueryString}`)
-
-
-
-
-
-
-        } else if (direction === "prev") {
-            let newPage = (Number(selectedPage) - 1).toString()
-            const params = new URLSearchParams(searchParams.toString())
-            console.log(params);
-            params.set('page', newPage)
-            const newQueryString = params.toString()
-            console.log(newQueryString + " sonirhol");
-            router.push(`?${newQueryString}`)
-        }
-
-    };
-
 
     const getGenres = async () => {
         const respo = await fetch(
@@ -87,14 +57,14 @@ const ExampleComponent = () => {
         );
         const resuult = await respo.json();
         setGenresValue(resuult.genres);
+        setTotalPage(resuult.total_pages)
     }
-
     const getGenreMovies = async () => {
         const movieResponses = await fetch(`https://api.themoviedb.org/3/discover/movie?language=en&with_genres=${selectedGenres}&page=${selectedPage}&api_key=${movieApiKey}`);
         const movies = await movieResponses.json();
         setListOfMovies(movies)
         console.log(movies);
-
+        setTotalPage(movies.total_pages)
     }
 
     useEffect(() => {
@@ -109,20 +79,10 @@ const ExampleComponent = () => {
 
         const params = new URLSearchParams(searchParams.toString());
         console.log(params + " sonirhol");
-
         selectedGenres.push(genreId);
-
-
-
-
-
         params.set('genrelds', selectedGenres.join(','));
         const newQueryString = params.toString()
         console.log(newQueryString + " tata");
-
-
-
-
         router.push(`?${newQueryString}`)
 
     };
@@ -145,7 +105,6 @@ const ExampleComponent = () => {
                                         <div key={el.id}>
                                             <button
                                                 onClick={() => handleGenreClick(el.id.toString())
-
                                                 }
                                                 className="inline-flex items-center border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground rounded-full cursor-pointer">
                                                 {el?.name}
@@ -168,28 +127,7 @@ const ExampleComponent = () => {
                     </div>
                 </div>
             </section>
-            <div>
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious onClick={() => handlePageChange("prev")} />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink></PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink ></PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationEllipsis />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationNext onClick={() => handlePageChange("next")} />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-
-            </div>
+<DynamicPagination total_page={totalPage} />
             <Footer />
         </>
     )
